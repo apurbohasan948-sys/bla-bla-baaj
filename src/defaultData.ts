@@ -1,6 +1,7 @@
 import { MedicalReport } from "./types";
+import defaultAvatar from "./assets/images/patient_avatar_1779277307280.png";
 
-export const DEFAULT_AVATAR = "/src/assets/images/patient_avatar_1779277307280.png";
+export const DEFAULT_AVATAR = defaultAvatar;
 
 export const TEMPLATE_REPORT: MedicalReport = {
   id: "template-1",
