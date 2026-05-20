@@ -22,6 +22,29 @@ import LabTable from "./components/LabTable";
 import SealAndSignatures from "./components/SealAndSignatures";
 import ReportEditorControl from "./components/ReportEditorControl";
 
+// Safe LocalStorage utility wrapper to avoid SecurityError in restricted frames (e.g. GitHub/Netlify custom sandboxes)
+const safeStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.warn("Storage access denied. Falling back to in-memory store.", e);
+      return (window as any).__memStorage?.[key] || null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.warn("Storage write denied. Saving in-memory.", e);
+      if (!(window as any).__memStorage) {
+        (window as any).__memStorage = {};
+      }
+      (window as any).__memStorage[key] = value;
+    }
+  }
+};
+
 export default function App() {
   const [reports, setReports] = useState<MedicalReport[]>([]);
   const [selectedReportId, setSelectedReportId] = useState<string>("");
@@ -31,7 +54,7 @@ export default function App() {
 
   // 1. Initial State Loading from LocalStorage or Fallback Defaults
   useEffect(() => {
-    const saved = localStorage.getItem("aljabbar_reports_db");
+    const saved = safeStorage.getItem("aljabbar_reports_db");
     if (saved) {
       try {
         const parsed: MedicalReport[] = JSON.parse(saved);
@@ -49,7 +72,7 @@ export default function App() {
     const initialList = [TEMPLATE_REPORT];
     setReports(initialList);
     setSelectedReportId(TEMPLATE_REPORT.id);
-    localStorage.setItem("aljabbar_reports_db", JSON.stringify(initialList));
+    safeStorage.setItem("aljabbar_reports_db", JSON.stringify(initialList));
   }, []);
 
   const currentReport = reports.find((r) => r.id === selectedReportId) || reports[0] || TEMPLATE_REPORT;
@@ -65,7 +88,7 @@ export default function App() {
   // 2. State persistence & sync function
   const saveAllReports = (updatedReports: MedicalReport[]) => {
     setReports(updatedReports);
-    localStorage.setItem("aljabbar_reports_db", JSON.stringify(updatedReports));
+    safeStorage.setItem("aljabbar_reports_db", JSON.stringify(updatedReports));
   };
 
   const handleUpdateReport = (updated: MedicalReport) => {
@@ -229,7 +252,7 @@ export default function App() {
       const defaultList = [TEMPLATE_REPORT];
       setReports(defaultList);
       setSelectedReportId(TEMPLATE_REPORT.id);
-      localStorage.setItem("aljabbar_reports_db", JSON.stringify(defaultList));
+      safeStorage.setItem("aljabbar_reports_db", JSON.stringify(defaultList));
       triggerAlert("System reset to Al-Jabbar original medical report template.", "info");
     }
   };
