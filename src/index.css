@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Print Utilities */
+@media print {
+  /* Reset document for high fidelity printing */
+  html, body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 11pt !important;
+  }
+  
+  /* Hide non-printable app UI */
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Force exact print container sizing and behavior */
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 210mm !important; /* standard A4 width */
+    height: 297mm !important; /* standard A4 height */
+    max-width: 100% !important;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: white !important;
+  }
+  
+  @page {
+    size: A4 portrait;
+    margin: 0 !important; /* using physical structure margins in CSS */
+  }
+}
+
+/* Custom smooth scrollbar for our sidebars and dashboard lists */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.02);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.25);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.02);
+}
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+}
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
