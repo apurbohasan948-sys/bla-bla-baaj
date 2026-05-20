@@ -84,14 +84,27 @@
 
 /* Print Utilities */
 @media print {
-  /* Reset document for high fidelity printing */
+  /* Reset document and all ancestor elements to prevent spacing, margins, padding, flex, or overflow clipping from breaking the A4 sheet page flow */
+  html, body, #root, #root > div, main, section, .scrollbar-none {
+    display: block !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
   html, body {
     background: white !important;
     color: black !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
+    width: 210mm !important;
+    height: 297mm !important;
     font-size: 11pt !important;
   }
   
@@ -100,17 +113,22 @@
     display: none !important;
   }
   
-  /* Force exact print container sizing and behavior */
+  /* Force exact print container sizing, behavior, and position at top-left of page 1 */
   .print-area {
+    visibility: visible !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
     box-shadow: none !important;
     border: none !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
+    margin: 0 !important;
+    padding: 15mm 20mm 15mm 20mm !important; /* Standard physical padding margins inside A4 page */
     width: 210mm !important; /* standard A4 width */
     height: 297mm !important; /* standard A4 height */
+    box-sizing: border-box !important;
     max-width: 100% !important;
-    page-break-after: avoid;
-    page-break-inside: avoid;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     background-color: white !important;
@@ -118,7 +136,7 @@
   
   @page {
     size: A4 portrait;
-    margin: 0 !important; /* using physical structure margins in CSS */
+    margin: 0 !important; /* using physical container padding margins defined above */
   }
 }
 
